@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Todo List</string>
+
+    <string name="edtItemHint">Write a task!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_string">Add</string>
+    <string name="del_string">Delete Item</string>
+</resources>
