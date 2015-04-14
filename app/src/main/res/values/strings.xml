@@ -4,10 +4,8 @@
     <string name="edtItemHint">Write a task!</string>
     <string name="action_settings">Settings</string>
     <string name="addString">Add</string>
-    <string name="delString">Delete Item</string>
     <string name="noDueString">No due date</string>
     <string name="addItemTitleString">Add New Item</string>
     <string name="menuItemDeleteString">Delete Item</string>
-    <string name="menuItemCallIdentifierString">Call </string>
 
 </resources>

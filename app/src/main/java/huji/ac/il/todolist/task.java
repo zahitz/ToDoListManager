@@ -1,10 +1,10 @@
 package huji.ac.il.todolist;
 
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Zahi on 08/04/2015.
+ * A single task in the ToDo list.
+ * Has the task title, and it's due date.
  */
 public class task {
     private String title;

@@ -24,6 +24,8 @@ import java.util.Date;
 
 public class TodoListManagerActivity extends ActionBarActivity {
     private static final int ADD_TASK = 0;
+    private static final String CALL_TASK_IDENTIFIER = "Call ";
+
 
     ArrayList<task> tasks;
     ListView todoList;
@@ -103,8 +105,8 @@ public class TodoListManagerActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_TASK) {
             if (resultCode == RESULT_OK) {
-                String title = data.getStringExtra("title");
-                long dueDate = data.getLongExtra("dueDate", -1);
+                String title = data.getStringExtra(AddNewTodoItemActivity.EXTRA_TITLE);
+                long dueDate = data.getLongExtra(AddNewTodoItemActivity.EXTRA_DUE_DATE, -1);
                 tasks.add(new task(title, dueDate));
                 tasksAdapter.notifyDataSetChanged();
             }
@@ -118,7 +120,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
         int position = info.position;
         String taskTitle = tasks.get(position).getTitle();
         getMenuInflater().inflate(R.menu.menu_list_item_context_view, menu.setHeaderTitle(taskTitle));
-        if (taskTitle.startsWith(getString(R.string.menuItemCallIdentifierString))) {
+        if (taskTitle.startsWith(CALL_TASK_IDENTIFIER)) {
             menu.findItem(R.id.menuItemCall).setVisible(true).setTitle(taskTitle);
         }
     }
@@ -133,7 +135,7 @@ public class TodoListManagerActivity extends ActionBarActivity {
                 return true;
             case R.id.menuItemCall:
                 String taskTitle = tasks.get(info.position).getTitle();
-                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+taskTitle.replaceFirst("Call ", "")));
+                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+taskTitle.replaceFirst(CALL_TASK_IDENTIFIER, "")));
                 startActivity(dial);
                 return true;
             default:
