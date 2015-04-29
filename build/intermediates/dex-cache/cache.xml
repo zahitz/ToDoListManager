@@ -2,6 +2,13 @@
 <items version="2" >
 
     <item
+        jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\libs\joda-time-2.7-sources.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1fc633cf2a3f5a1767ef28b81ebc5d0ecfa1ffda">
+        <dex dex="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\pre-dexed\debug\joda-time-2.7-sources-d2e635d4456faa2a05cc36dff8f9f21adf38ba25.jar" />
+    </item>
+    <item
         jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar"
         jumboMode="false"
         revision="21.1.2"
@@ -21,6 +28,27 @@
         revision="21.1.2"
         sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
         <dex dex="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\pre-dexed\debug\classes-8c38aaabb87ed80b306437046195dd25715e60aa.jar" />
+    </item>
+    <item
+        jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\libs\joda-time-2.7-no-tzdb.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b321fd17a60912973a8344da427487c65ccbb552">
+        <dex dex="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\pre-dexed\debug\joda-time-2.7-no-tzdb-6459d2cc6f6acbb4d4d472b40d3154e461175588.jar" />
+    </item>
+    <item
+        jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\libs\joda-time-2.7.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="5599707a3eaad13e889f691b3af78c8c03842195">
+        <dex dex="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\pre-dexed\debug\joda-time-2.7-1b699a5fbcca642b6b58d4479d6eccbb3d1ec952.jar" />
+    </item>
+    <item
+        jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\libs\joda-time-2.7-javadoc.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="351cade78537f39873934beb5dd605fa2e71b947">
+        <dex dex="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\pre-dexed\debug\joda-time-2.7-javadoc-c3aa89746688fc91fa6b142593a1a9ad90c30792.jar" />
     </item>
     <item
         jar="C:\Users\Zahi\AndroidStudioProjects\TodoList\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar"

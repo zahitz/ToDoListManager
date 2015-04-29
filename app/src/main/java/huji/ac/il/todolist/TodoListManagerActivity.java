@@ -1,24 +1,18 @@
 package huji.ac.il.todolist;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -26,54 +20,22 @@ public class TodoListManagerActivity extends ActionBarActivity {
     private static final int ADD_TASK = 0;
     private static final String CALL_TASK_IDENTIFIER = "Call ";
 
-
-    ArrayList<task> tasks;
     ListView todoList;
-    ArrayAdapter<task> tasksAdapter;
-    Date currDate;
+    DBHelper helper;
+    ToDoListAdapter tasksAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
-        tasks = new ArrayList<task>();
         todoList = (ListView) findViewById(R.id.lstTodoItems);
         registerForContextMenu(todoList);
-        currDate = Calendar.getInstance().getTime();
-
-        tasksAdapter = new ArrayAdapter<task>(this, R.layout.todo_list_item, tasks) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view;
-                if (convertView == null) {
-                    LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                    view = inflater.inflate(R.layout.todo_list_item, null);
-                } else {
-                    view = convertView;
-                }
-                TextView title = (TextView) view.findViewById(R.id.txtTodoTitle);
-                TextView dueDate = (TextView) view.findViewById(R.id.txtTodoDueDate);
-                title.setText(tasks.get(position).getTitle());
-                Date taskDueDate = tasks.get(position).getDueDate();
-                //Creating the dueDate string in the format
-                String strDate = null;
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-                if (taskDueDate != null) {
-                    strDate = sdf.format(taskDueDate.getTime());
-                    if (currDate.after(taskDueDate)) {
-                        title.setTextColor(Color.RED);
-                        dueDate.setTextColor(Color.RED);
-                    }
-                } else {
-                    strDate = getResources().getText(R.string.noDueString).toString();
-                }
-                dueDate.setText(strDate);
-                return view;
-            }
-        };
+        helper = new DBHelper(this);
+        Cursor cursor = helper.getData();
+        tasksAdapter = new ToDoListAdapter(this, cursor);
         todoList.setAdapter(tasksAdapter);
+
     }
 
 
@@ -107,7 +69,8 @@ public class TodoListManagerActivity extends ActionBarActivity {
             if (resultCode == RESULT_OK) {
                 String title = data.getStringExtra(AddNewTodoItemActivity.EXTRA_TITLE);
                 long dueDate = data.getLongExtra(AddNewTodoItemActivity.EXTRA_DUE_DATE, -1);
-                tasks.add(new task(title, dueDate));
+                helper.insertTask(title, dueDate);
+                tasksAdapter.changeCursor(helper.getData());
                 tasksAdapter.notifyDataSetChanged();
             }
         }
@@ -117,9 +80,16 @@ public class TodoListManagerActivity extends ActionBarActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        int position = info.position;
-        String taskTitle = tasks.get(position).getTitle();
-        getMenuInflater().inflate(R.menu.menu_list_item_context_view, menu.setHeaderTitle(taskTitle));
+        Cursor cursor = (Cursor) tasksAdapter.getItem(info.position);
+        if (cursor == null) {
+            return;
+        }
+        String taskTitle = cursor.getString(cursor.getColumnIndex(DBHelper.COL_TITLE));
+        menu.setHeaderTitle(taskTitle);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_list_item_context_view, menu);
+
+        // Open dialer in case of a "Call" task.
         if (taskTitle.startsWith(CALL_TASK_IDENTIFIER)) {
             menu.findItem(R.id.menuItemCall).setVisible(true).setTitle(taskTitle);
         }
@@ -128,16 +98,22 @@ public class TodoListManagerActivity extends ActionBarActivity {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        long id = tasksAdapter.getItemId(info.position);
+
         switch (item.getItemId()) {
             case R.id.menuItemDelete:
-                tasks.remove(info.position);
+                helper.deleteTask(id);
+                tasksAdapter.changeCursor(helper.getData());
                 tasksAdapter.notifyDataSetChanged();
                 return true;
+
             case R.id.menuItemCall:
-                String taskTitle = tasks.get(info.position).getTitle();
-                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+taskTitle.replaceFirst(CALL_TASK_IDENTIFIER, "")));
+                Cursor cursor = (Cursor) tasksAdapter.getItem(info.position);
+                Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+cursor.getString(
+                        cursor.getColumnIndex(DBHelper.COL_TITLE)).replaceFirst(CALL_TASK_IDENTIFIER, "")));
                 startActivity(dial);
                 return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
